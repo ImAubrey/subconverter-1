@@ -756,6 +756,18 @@ std::string proxyToSurge(std::vector<Proxy> &nodes, const std::string &base_conf
             if(!scv.is_undef())
                 proxy += ", skip-cert-verify=" + scv.get_str();
             break;
+                
+                //Hysteria
+         case ProxyType::Hysteria:
+            if(surge_ver < 4 && surge_ver != -3)
+                continue;
+            proxy = "hysteria, " + hostname + ", " + port + ", auth_str=" + auth_str + ", alpn=" + alpn + ", protocol=" + protocol + ", up=" + up +", down=" + down +",disable_mtu_discovery= " + mtu + ";
+          
+            if(!host.empty())
+                proxy += ", sni=" + host;
+            if(!scv.is_undef())
+                proxy += ", skip-cert-verify=" + scv.get_str();
+            break;
         case ProxyType::Snell:
             proxy = "snell, " + hostname + ", " + port + ", psk=" + password;
             if(!obfs.empty())
