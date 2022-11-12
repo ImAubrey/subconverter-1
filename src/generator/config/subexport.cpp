@@ -316,16 +316,16 @@ void proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGr
                 }
             case ProxyType::Hysteria:
             singleproxy["type"] = "hysteria";
-            singleproxy["auth_str"] = x.UserId;
+            singleproxy["auth_str"] = x.Auth;
             singleproxy["protocol"] = x.Protocol;
             singleproxy["alpn"] = x.Alpn;
             singleproxy["up"] = x.Up;
             singleproxy["down"] = x.Down;
-            singleproxy["recv_window_conn"] = x.conn;
+            singleproxy["recv_window_conn"] = x.Conn;
 
-            singleproxy["recv_window"] = x.recv;
+            singleproxy["recv_window"] = x.Recv;
 
-            singleproxy["disable_mtu_discovery"] = x.mtu;
+            singleproxy["disable_mtu_discovery"] = x.Mtu;
             if(!scv.is_undef())
                 singleproxy["skip-cert-verify"] = scv.get();
             if(!x.ServerName.empty())
@@ -761,13 +761,13 @@ std::string proxyToSurge(std::vector<Proxy> &nodes, const std::string &base_conf
          case ProxyType::Hysteria:
             if(surge_ver < 4 && surge_ver != -3)
                 continue;
-            proxy = "hysteria, " + hostname + ", " + port + ", auth_str=" + auth_str + ", alpn=" + alpn + ", protocol=" + protocol + ", up=" + up +", down=" + down +",disable_mtu_discovery= " + mtu + ";
-          
+            proxy = "hysteria, " + hostname + ", " + port + ", auth_str=" + Auth + ", alpn=" + Alpn + ", protocol=" + Protocol + ", up=" + Up +", down=" + Down +",disable_mtu_discovery= " + Mtu + ";
             if(!host.empty())
                 proxy += ", sni=" + host;
             if(!scv.is_undef())
                 proxy += ", skip-cert-verify=" + scv.get_str();
             break;
+                
         case ProxyType::Snell:
             proxy = "snell, " + hostname + ", " + port + ", psk=" + password;
             if(!obfs.empty())
