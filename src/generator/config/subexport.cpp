@@ -314,31 +314,33 @@ void proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGr
                     if(!x.Edge.empty())
                         singleproxy["ws-headers"]["Edge"] = x.Edge;
                 }
+            case ProxyType::Hysteria:
+            singleproxy["type"] = "hysteria";
+            singleproxy["auth_str"] = x.UserId;
+            singleproxy["protocol"] = x.Protocol;
+            singleproxy["alpn"] = x.Alpn;
+            singleproxy["up"] = x.Up;
+            singleproxy["down"] = x.Down;
+            singleproxy["recv_window_conn"] = x.conn;
+
+            singleproxy["recv_window"] = x.recv;
+
+            singleproxy["disable_mtu_discovery"] = x.mtu;
+            if(!scv.is_undef())
+                singleproxy["skip-cert-verify"] = scv.get();
+            if(!x.ServerName.empty())
+                singleproxy["servername"] = x.ServerName;
+            switch(hash_(x.TransferProtocol))
+            {
+            case "tcp"_hash:
                 break;
-            case "http"_hash:
-                singleproxy["network"] = x.TransferProtocol;
-                singleproxy["http-opts"]["method"] = "GET";
-                singleproxy["http-opts"]["path"].push_back(x.Path);
-                if(!x.Host.empty())
-                    singleproxy["http-opts"]["headers"]["Host"].push_back(x.Host);
-                if(!x.Edge.empty())
-                    singleproxy["http-opts"]["headers"]["Edge"].push_back(x.Edge);
-                break;
-            case "h2"_hash:
-                singleproxy["network"] = x.TransferProtocol;
-                singleproxy["h2-opts"]["path"] = x.Path;
-                if(!x.Host.empty())
-                    singleproxy["h2-opts"]["host"].push_back(x.Host);
-                break;
-            case "grpc"_hash:
-                singleproxy["network"] = x.TransferProtocol;
-                singleproxy["servername"] = x.Host;
-                singleproxy["grpc-opts"]["grpc-service-name"] = x.Path;
-                break;
+            
             default:
                 continue;
             }
             break;
+                    
+                    //sbsbsbsbsbsb
         case ProxyType::ShadowsocksR:
             //ignoring all nodes with unsupported obfs, protocols and encryption
             if(ext.filter_deprecated)
